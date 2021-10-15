@@ -25,7 +25,7 @@ int main(int argc, char** argv)
 		("map,m", po::value<string>()->required(), "input file for map")
 		("agents,a", po::value<string>()->required(), "input file for agents")
 		("output,o", po::value<string>(), "output file for statistics")
-		("outputPaths,o", po::value<string>(), "output file for paths")
+		("outputPaths", po::value<string>(), "output file for paths")
 		("agentNum,k", po::value<int>()->default_value(0), "number of agents")
 		("cutoffTime,t", po::value<double>()->default_value(7200), "cutoff time (seconds)")
 		("screen,s", po::value<int>()->default_value(1), "screen option (0: none; 1: results; 2:all)")
@@ -44,6 +44,8 @@ int main(int argc, char** argv)
 		("disjointSplitting", po::value<bool>()->default_value(false), "disjoint splitting")
 		("rectangleReasoning", po::value<bool>()->default_value(true), "rectangle reasoning")
 		("corridorReasoning", po::value<bool>()->default_value(true), "corridor reasoning")
+		("targetReasoning", po::value<bool>()->default_value(true), "target reasoning")
+		("restart", po::value<int>()->default_value(0), "rapid random restart times")
 		;
 	po::variables_map vm;
 	po::store(po::parse_command_line(argc, argv, desc), vm);
@@ -133,7 +135,7 @@ int main(int argc, char** argv)
 		vm["agentNum"].as<int>());
 
 	srand(0);
-	int runs = 1;
+	int runs = 1 + vm["restart"].as<int>();
 	//////////////////////////////////////////////////////////////////////
     // initialize the solver
 	if (vm["lowLevelSolver"].as<bool>())
@@ -158,12 +160,13 @@ int main(int argc, char** argv)
         for (int i = 0; i < runs; i++)
         {
             ecbs.clear();
-            ecbs.solve(vm["cutoffTime"].as<double>(), lowerbound);
+            ecbs.solve(vm["cutoffTime"].as<double>() / runs, lowerbound);
             runtime += ecbs.runtime;
             if (ecbs.solution_found)
                 break;
             lowerbound = ecbs.getLowerBound();
             ecbs.randomRoot = true;
+            cout << "Failed to find solutions in Run " << i << endl;
         }
         ecbs.runtime = runtime;
         if (vm.count("output"))
@@ -199,12 +202,13 @@ int main(int argc, char** argv)
         for (int i = 0; i < runs; i++)
         {
             cbs.clear();
-            cbs.solve(vm["cutoffTime"].as<double>(), lowerbound);
+            cbs.solve(vm["cutoffTime"].as<double>() / runs, lowerbound);
             runtime += cbs.runtime;
             if (cbs.solution_found)
                 break;
             lowerbound = cbs.getLowerBound();
             cbs.randomRoot = true;
+            cout << "Failed to find solutions in Run " << i << endl;
         }
         cbs.runtime = runtime;
         if (vm.count("output"))

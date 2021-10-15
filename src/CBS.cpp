@@ -111,7 +111,7 @@ void CBS::findConflicts(HLNode& curr)
 	clock_t t = clock();
 	if (curr.parent != nullptr)
 	{
-		// Copy from parent、
+		// Copy from parent
 		auto new_agents = curr.getReplannedAgents();
 		copyConflicts(curr.parent->conflicts, curr.conflicts, new_agents);
 		copyConflicts(curr.parent->unknownConf, curr.unknownConf, new_agents);
@@ -1107,7 +1107,8 @@ void CBS::savePaths(const string &fileName) const
     {
         output << "Agent " << i << ": ";
         for (const auto & t : *paths[i])
-            output << t.location << "->";
+            output << "(" << search_engines[0]->instance.getRowCoordinate(t.location)
+                   << "," << search_engines[0]->instance.getColCoordinate(t.location) << ")->";
         output << endl;
     }
     output.close();

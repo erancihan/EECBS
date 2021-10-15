@@ -8,6 +8,32 @@ IF(NOT CMAKE_BUILD_TYPE)
     SET(CMAKE_BUILD_TYPE "RELEASE")
 ENDIF()
 
+
+IF(NOT DEFINED NO_WAIT)
+    set(NO_WAIT 0)
+ENDIF()
+IF(NOT DEFINED DISAPPEAR_AT_TARGET)
+    set(DISAPPEAR_AT_TARGET 0)
+ENDIF()
+
+
+IF(NO_WAIT)
+    MESSAGE("Building WITHOUT Wait action")
+    add_compile_definitions(NO_WAIT=1)
+ELSE()
+    MESSAGE("Building WITH Wait action")
+    add_compile_definitions(NO_WAIT=0)
+ENDIF()
+
+IF(DISAPPEAR_AT_TARGET)
+    MESSAGE("Building WITH DISAPPEAR AT TARGET")
+    add_compile_definitions(DISAPPEAR_AT_TARGET=1)
+ELSE()
+    MESSAGE("Building WITHOUT DISAPPEAR AT TARGET")
+    add_compile_definitions(DISAPPEAR_AT_TARGET=0)
+ENDIF()
+
+
 set(BOOST_ROOT "D:/boost/1_73_0")
 set(BOOST_INCLUDEDIR "D:/boost/1_73_0")
 set(Boost_USE_STATIC_LIBS ON)

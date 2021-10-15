@@ -7,6 +7,7 @@
 /*driver.cpp
 * Solve a MAPF instance on 2D grids.
 */
+#include <iostream>
 #include <boost/program_options.hpp>
 #include <boost/tokenizer.hpp>
 #include "ECBS.h"
@@ -15,6 +16,17 @@
 /* Main function */
 int main(int argc, char** argv)
 {
+#if NO_WAIT
+    std::cout << "WAIT Action DISABLED" << std::endl;
+#else
+    std::cout << "WAIT Action ENABLED" << std::endl;
+#endif
+#if DISAPPEAR_AT_TARGET
+    std::cout << "DISAPPEAR_AT_TARGET ENABLED" << std::endl;
+#else
+    std::cout << "DISAPPEAR_AT_TARGET DISABLED" << std::endl;
+#endif
+
 	namespace po = boost::program_options;
 	// Declare the supported options.
 	po::options_description desc("Allowed options");

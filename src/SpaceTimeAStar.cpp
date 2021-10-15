@@ -79,7 +79,11 @@ pair<Path, int> SpaceTimeAStar::findSuboptimalPath(const HLNode& node, const Con
 			continue;
 
 		auto next_locations = instance.getNeighbors(curr->location);
-		next_locations.emplace_back(curr->location);
+#if NO_WAIT
+#else
+        next_locations.emplace_back(curr->location);
+#endif
+
 		for (int next_location : next_locations)
 		{
 			int next_timestep = curr->timestep + 1;
